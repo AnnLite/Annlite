@@ -14,7 +14,7 @@
   "dependencies": {
     "@fontsource-variable/dm-sans": "^5.2.6",
     "@fontsource-variable/fraunces": "^5.2.6",
-    "lucide-react": "^0.500.0",
+    "lucide-react": "^1.49.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-router-dom": "^7.18.4",
