@@ -17,7 +17,7 @@ in Haitian Creole, French and English.
 [![Status](https://img.shields.io/badge/status-pre--production-orange.svg)](#status)
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
-[Website](https://annlite.github.io/Annlite/) · [Architecture](docs/architecture/README.md) · [Payments](docs/payments/README.md) · [Roadmap](ROADMAP.md) · [Security](SECURITY.md) · [Contributing](CONTRIBUTING.md)
+[Website](https://annlite.com/) · [GitHub Pages](https://annlite.github.io/Annlite/) · [Architecture](docs/architecture/README.md) · [Payments](docs/payments/README.md) · [Roadmap](ROADMAP.md) · [Security](SECURITY.md) · [Contributing](CONTRIBUTING.md)
 
 </div>
 

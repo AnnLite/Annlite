@@ -43,7 +43,7 @@ const pageDescriptions: Record<string, MessageKey> = {
   "/profile": "page.profile.description",
 };
 
-const siteUrl = "https://annlite.github.io/Annlite";
+const siteUrl = "https://annlite.com";
 
 function RouteMetadata() {
   const { pathname } = useLocation();
