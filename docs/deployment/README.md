@@ -1,19 +1,15 @@
 # Deployment
 
-The `apps/web` preview builds as a static Vite site with `pnpm --filter @annlite/web build`. It includes an installable PWA shell and a service worker that caches the built app shell; it does not make remote APIs or the full content catalog available offline. The published artifact includes `apps/web/public/CNAME` for the custom domain `annlite.com` and emits a `404.html` fallback for client-side routes.
+The `apps/web` preview builds as a static Vite site with `pnpm --filter @annlite/web build`. It includes an installable PWA shell and a service worker that caches the built app shell; it does not make remote APIs or the full content catalog available offline. The artifact includes `CNAME` for `annlite.com` and a `404.html` fallback for client-side routes.
 
-GitHub Pages deploys through Actions after quality gates pass. The canonical URL is `https://annlite.com/`; `https://annlite.github.io/Annlite/` remains an alternate Pages URL.
+The two origins are built and deployed separately so neither depends on redirecting to the other:
 
-Configure these DNS records at the domain registrar for the apex domain:
+- `https://annlite.github.io/Annlite/` uses the `/Annlite/` asset base and GitHub Pages metadata.
+- `https://annlite.com/` uses the root asset base and custom-domain metadata, deployed as a Cloudflare Pages project named `annlite`.
 
-| Type | Host | Value |
-|---|---|---|
-| A | `@` | `185.199.108.153` |
-| A | `@` | `185.199.109.153` |
-| A | `@` | `185.199.110.153` |
-| A | `@` | `185.199.111.153` |
+GitHub Pages deploys after CI passes. The independent Cloudflare deployment also runs after CI, but is safely skipped until repository secrets `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` are configured. Create a Cloudflare Pages project named `annlite` and attach `annlite.com` before enabling those secrets.
 
-Optionally add GitHub's recommended AAAA records for IPv6. To serve `www.annlite.com`, add a CNAME record for `www` targeting `annlite.github.io` (hostname only). Once DNS resolves, set `annlite.com` under **Repository Settings → Pages** and enable **Enforce HTTPS**. DNS does not currently resolve from this environment, so registrar setup is still required before the custom URL will work.
+To keep the two origins independent, point the domain's DNS only at Cloudflare; do not add GitHub Pages apex A records. Delegate the domain's nameservers to Cloudflare, add `annlite.com` as a custom domain on the Cloudflare Pages project, and use the DNS records Cloudflare assigns. Configure `www.annlite.com` with the CNAME target Cloudflare provides if the `www` host is needed. Enable HTTPS after Cloudflare validates DNS. DNS currently has no records, so registrar access and Cloudflare project setup are required before `annlite.com` can resolve.
 
 Production hosting, release environments, API deployment, database operations, backups, and runtime monitoring are not configured. Do not infer a production deployment from the presence of a successful local build or CI run. Configure hosting and secrets only after the infrastructure and backend are reviewed.
 

@@ -2,11 +2,19 @@ import { defineConfig } from "vitest/config";
 import react from "@vitejs/plugin-react";
 import { VitePWA } from "vite-plugin-pwa";
 
-const base = "/";
+const isGitHubPages = process.env.ANNLITE_PAGES === "true";
+const base = isGitHubPages ? "/Annlite/" : "/";
+const siteOrigin = isGitHubPages ? "https://annlite.github.io/Annlite" : "https://annlite.com";
 
 export default defineConfig({
   base,
   plugins: [
+    {
+      name: "annlite-site-origin",
+      transformIndexHtml(html) {
+        return html.replaceAll("%SITE_ORIGIN%", siteOrigin);
+      },
+    },
     react(),
     VitePWA({
       registerType: "autoUpdate",

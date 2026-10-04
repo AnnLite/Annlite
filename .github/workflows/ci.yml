@@ -23,7 +23,10 @@ jobs:
       - run: pnpm build
       - name: Build GitHub Pages site
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        run: pnpm --filter @annlite/web build
+        run: ANNLITE_PAGES=true pnpm --filter @annlite/web build
+      - name: Remove custom-domain marker from project Pages artifact
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: rm apps/web/dist/CNAME
       - name: Upload Pages artifact
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: actions/upload-pages-artifact@v3
@@ -42,3 +45,40 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
+  deploy-custom-domain:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: quality
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Cloudflare credentials
+        id: cloudflare
+        shell: bash
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          if [[ -n "$CLOUDFLARE_API_TOKEN" && -n "$CLOUDFLARE_ACCOUNT_ID" ]]; then
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            echo "Cloudflare deployment skipped: configure CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID repository secrets."
+          fi
+      - uses: actions/checkout@v4
+        if: steps.cloudflare.outputs.configured == 'true'
+      - uses: pnpm/action-setup@v4
+        if: steps.cloudflare.outputs.configured == 'true'
+        with: { version: 9.12.0 }
+      - uses: actions/setup-node@v4
+        if: steps.cloudflare.outputs.configured == 'true'
+        with: { node-version: 22, cache: pnpm }
+      - run: pnpm install --frozen-lockfile
+        if: steps.cloudflare.outputs.configured == 'true'
+      - run: pnpm --filter @annlite/web build
+        if: steps.cloudflare.outputs.configured == 'true'
+      - name: Deploy independent annlite.com site
+        if: steps.cloudflare.outputs.configured == 'true'
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy apps/web/dist --project-name=annlite --branch=main

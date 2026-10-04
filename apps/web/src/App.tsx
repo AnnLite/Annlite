@@ -43,7 +43,9 @@ const pageDescriptions: Record<string, MessageKey> = {
   "/profile": "page.profile.description",
 };
 
-const siteUrl = "https://annlite.com";
+const siteUrl = import.meta.env.BASE_URL === "/Annlite/"
+  ? "https://annlite.github.io/Annlite"
+  : "https://annlite.com";
 
 function RouteMetadata() {
   const { pathname } = useLocation();
