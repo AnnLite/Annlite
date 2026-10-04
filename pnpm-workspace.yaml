@@ -1,0 +1,7 @@
+packages:
+  - "apps/*"
+  - "backend"
+  - "payments/*"
+  - "design-system"
+  - "database"
+  - "tests"

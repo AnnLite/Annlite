@@ -1,0 +1,16 @@
+name: Release
+on:
+  push:
+    tags: ["v*"]
+permissions: { contents: write }
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create GitHub release from docs/releases
+        env: { GH_TOKEN: "${{ github.token }}" }
+        run: |
+          NOTES="docs/releases/${GITHUB_REF_NAME}.md"
+          if [ -f "$NOTES" ]; then gh release create "$GITHUB_REF_NAME" --title "$GITHUB_REF_NAME" --notes-file "$NOTES"
+          else gh release create "$GITHUB_REF_NAME" --title "$GITHUB_REF_NAME" --generate-notes; fi
