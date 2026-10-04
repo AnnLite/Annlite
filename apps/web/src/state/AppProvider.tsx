@@ -1,5 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useState, type PropsWithChildren } from "react";
 import { localeTags, t, type Locale, type MessageKey } from "../i18n";
+import { learnProgressKey } from "./learnProgress";
 
 export type Theme = "light" | "dark";
 export type JourneyStep = "verse" | "reading" | "prayer" | "reflection" | "kindness";
@@ -120,6 +121,11 @@ export function AppProvider({ children }: PropsWithChildren) {
   const removeEntry = (id: string) => setEntries((current) => current.filter((entry) => entry.id !== id));
 
   const clearLocalData = () => {
+    try {
+      localStorage.removeItem(learnProgressKey);
+    } catch {
+      // Storage may be unavailable in private browsing.
+    }
     setProgress({ date: today, complete: [] });
     setBookmarks([]);
     setHistory([]);

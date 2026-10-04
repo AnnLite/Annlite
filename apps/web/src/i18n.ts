@@ -383,7 +383,26 @@ const ht: Messages = {
   "page.terms.title": "Kondisyon itilizasyon", "page.terms.description": "Kondisyon ki aplike pou aperçu web AnnLite aktyèl la.", "terms.updated": "Dènye mizajou: 4 oktòb 2026", "terms.previewTitle": "Sèvis aperçu", "terms.previewCopy": "Sit sa a se yon aperçu pou enfòmasyon ak edikasyon. Kont, backend, piblikasyon kominote, ak tretman don AnnLite pa konekte.", "terms.contentTitle": "Lafwa ak kontni", "terms.contentCopy": "Nou make ekstrè Labib yo kòm tèks piblik World English Bible. Refleksyon yo se kontni edikatif jeneral; yo pa ranplase konsèy pwofesyonèl, medikal, legal, oswa pastoral.", "terms.givingTitle": "Don ekstèn", "terms.givingCopy": "Bouton CeloHT la ouvri yon sèvis ekstèn. AnnLite pa kòmanse, resevwa, konfime, ni bay resi pou peman sou sit sa a. Kondisyon sèvis ekstèn nan aplike.", "terms.availabilityTitle": "Disponiblite ak chanjman", "terms.availabilityCopy": "Aperçu a disponib jan li ye a epi li ka chanje pandan pwojè a ap devlope. Pa sèvi avè l pou ijans, prèv finansye, ni depo sekirize.",
 };
 
-const messages: Record<Locale, Messages> = { en, fr, ht };
+const messages: Record<Locale, Messages> = {
+  en: {
+    ...en,
+    "page.learn.description": "Explore Christian courses, Scripture, and thoughtful ways to live out faith through short lessons, reflection, and practice.",
+    "profile.confirmClear": "Delete saved verses, notes, journal entries, learning progress, bookmarks, quiz results, and daily progress from this browser? This cannot be undone.",
+    "privacy.storageCopy": "AnnLite stores preferences, reading history, bookmarks, Bible notes, prayer-journal entries, daily progress, and Learn progress in this browser's local storage. The preview does not upload or synchronize them.",
+  },
+  fr: {
+    ...fr,
+    "page.learn.description": "Explorez des cours chrétiens, les Écritures et des façons réfléchies de vivre la foi grâce à de courtes leçons, à la réflexion et à la pratique.",
+    "profile.confirmClear": "Supprimer de ce navigateur les versets enregistrés, les notes, le journal de prière, la progression d’apprentissage, les favoris, les résultats des questionnaires et le parcours quotidien ? Cette action est irréversible.",
+    "privacy.storageCopy": "AnnLite conserve les préférences, l’historique de lecture, les favoris, les notes bibliques, le journal de prière, le parcours quotidien et la progression d’apprentissage dans le stockage local du navigateur. Cet aperçu ne les envoie ni ne les synchronise.",
+  },
+  ht: {
+    ...ht,
+    "page.learn.description": "Eksplore kou kretyen, Ekriti yo, ak fason pou viv lafwa avèk refleksyon nan ti leson, refleksyon, ak pratik.",
+    "profile.confirmClear": "Efase vèsè ou sove yo, nòt, jounal priyè, pwogrè aprantisaj, leson ou make, rezilta tès, ak chemen jodi a nan navigatè sa a? Ou pa ka defèt aksyon sa a.",
+    "privacy.storageCopy": "AnnLite sere preferans, istwa lekti, leson ou make, nòt Labib, jounal priyè, pwogrè jodi a, ak pwogrè aprantisaj nan depo lokal navigatè sa a. Aperçu sa a pa voye ni senkronize yo.",
+  },
+};
 
 export function t(locale: Locale, key: MessageKey, vars?: Record<string, string | number>): string {
   let value = messages[locale][key] ?? en[key];

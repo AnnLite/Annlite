@@ -2,6 +2,7 @@ import { lazy, Suspense, useEffect } from "react";
 import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import { PageHeading } from "./components/ui";
 import { AppShell } from "./components/AppShell";
+import { getCourse, getLesson } from "./content/learn";
 import { localeTags, type MessageKey } from "./i18n";
 import { AppProvider, useApp } from "./state/AppProvider";
 
@@ -70,8 +71,11 @@ function RouteMetadata() {
   const { locale, t } = useApp();
 
   useEffect(() => {
-    const title = t(pageTitles[pathname] ?? "page.notFound.title");
-    const description = t(pageDescriptions[pathname] ?? "page.notFound.description");
+    const [root, courseSlug, lessonSlug] = pathname.split("/").filter(Boolean);
+    const course = root === "learn" ? getCourse(courseSlug) : undefined;
+    const lesson = course && lessonSlug ? getLesson(course, lessonSlug) : undefined;
+    const title = lesson?.title[locale] ?? course?.title[locale] ?? t(pageTitles[pathname] ?? "page.notFound.title");
+    const description = lesson?.introduction[locale] ?? course?.description[locale] ?? t(pageDescriptions[pathname] ?? "page.notFound.description");
     document.title = `${title} · AnnLite`;
     document.documentElement.lang = localeTags[locale];
     document.querySelector('meta[name="description"]')?.setAttribute("content", description);
@@ -80,6 +84,19 @@ function RouteMetadata() {
     document.querySelector('meta[name="twitter:title"]')?.setAttribute("content", `${title} · AnnLite`);
     document.querySelector('meta[name="twitter:description"]')?.setAttribute("content", description);
     document.querySelector('link[rel="canonical"]')?.setAttribute("href", `${siteUrl}${pathname === "/" ? "/" : pathname}`);
+    const structuredData = document.getElementById("learn-structured-data");
+    if (course) {
+      const metadata = lesson
+        ? { "@context": "https://schema.org", "@type": "LearningResource", name: title, description, inLanguage: localeTags[locale], learningResourceType: "Lesson", isPartOf: { "@type": "Course", name: course.title[locale] }, url: `${siteUrl}${pathname}` }
+        : { "@context": "https://schema.org", "@type": "Course", name: title, description, inLanguage: localeTags[locale], educationalLevel: course.level, provider: { "@type": "Organization", name: "AnnLite", url: siteUrl }, url: `${siteUrl}${pathname}` };
+      const script = (structuredData ?? document.createElement("script")) as HTMLScriptElement;
+      script.id = "learn-structured-data";
+      script.type = "application/ld+json";
+      script.textContent = JSON.stringify(metadata);
+      if (!structuredData) document.head.appendChild(script);
+    } else {
+      structuredData?.remove();
+    }
     const reduceMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ?? false;
     window.scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" });
   }, [locale, pathname, t]);
@@ -97,7 +114,7 @@ function SiteRoutes() {
             <Route index element={<HomePage />} />
             <Route path="bible" element={<BiblePage />} />
             <Route path="reflections" element={<ReflectionsPage />} />
-            <Route path="learn" element={<LearnPage />} />
+            <Route path="learn/*" element={<LearnPage />} />
             <Route path="pray" element={<PrayerPage />} />
             <Route path="discover" element={<DiscoverPage />} />
             <Route path="quiz" element={<QuizPage />} />

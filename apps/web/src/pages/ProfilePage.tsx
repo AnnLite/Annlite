@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { localeNames, type Locale } from "../i18n";
 import { scripture } from "../content/catalog";
 import { useApp } from "../state/AppProvider";
+import { readLearnProgress } from "../state/learnProgress";
 import { PageHeading, Panel } from "../components/ui";
 
 type InstallPrompt = Event & {
@@ -38,6 +39,7 @@ export default function ProfilePage() {
       entries,
       history,
       progress,
+      learning: readLearnProgress(),
       preferences: { locale, theme },
     };
     const url = URL.createObjectURL(new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" }));
