@@ -1,13 +1,14 @@
 <div align="center">
 
-<img src="docs/brand/social-preview.png" alt="AnnLite — Pray. Learn. Hope. Serve." width="100%">
+<img width="554" height="554" alt="annlite-logo" src="https://github.com/user-attachments/assets/c81616cd-adc8-4170-8f1b-93986eb3f5b3" />
+
 
 # AnnLite
 
 ### Pray. Learn. Hope. Serve.
 *Priye. Aprann. Espere. Sèvi.*
 
-A Christian platform for **prayer, Bible reading, reflection and transparent charitable giving** —
+A Christian platform for **prayer, Bible reading, reflection and transparent charitable giving** 
 in Haitian Creole, French and English.
 
 [![CI](https://github.com/AnnLite/AnnLite/actions/workflows/ci.yml/badge.svg)](https://github.com/AnnLite/AnnLite/actions/workflows/ci.yml)
