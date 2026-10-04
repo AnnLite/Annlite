@@ -48,7 +48,7 @@ AnnLite supports two payment channels behind one server-authoritative backend co
 |---|---|---|
 | **CeloHT dApp** — CELO, USDm | [`payments/celoht`](payments/celoht) | Blockchain flow, verified on-chain by the backend. CeloHT is an *integration*, not AnnLite's identity. |
 | **Visa / Mastercard** | [`payments/cards`](payments/cards) | Through a card provider. AnnLite never stores raw card data. |
-| **Shared core** | [`payments/core`](payments/core) | Payment state machine, webhook HMAC verification with replay protection, idempotency, on-chain donation verification. **7/7 tests passing.** |
+| **Shared core** | [`payments/core`](payments/core) | Payment state machine, webhook HMAC verification with replay protection, idempotency, on-chain donation verification. **8/8 tests passing.** |
 
 **Golden rule:** a client-side "payment succeeded" message is never proof of payment.
 
@@ -92,7 +92,10 @@ docs/        architecture · development · deployment · security · payments �
 git clone https://github.com/AnnLite/AnnLite.git && cd AnnLite
 cp .env.example .env          # never commit real secrets
 pnpm install
+pnpm lint
+pnpm typecheck
 pnpm test
+pnpm build
 ```
 Quick check of the payment core without installing anything:
 ```bash
@@ -102,7 +105,7 @@ cd payments/core && npm test
 ## Testing
 | Suite | Status |
 |---|---|
-| `payments/core` (state machine, webhooks, idempotency, CELO/USDm verification) | ✅ 7/7 passing, typecheck clean |
+| `payments/core` (state machine, webhooks, idempotency, CELO/USDm verification) | ✅ 8/8 passing, typecheck clean |
 | web · mobile · admin · backend · database · end-to-end payment flows | ⏳ pending legacy code import |
 
 ## Security

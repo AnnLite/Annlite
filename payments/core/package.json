@@ -1,0 +1,31 @@
+{
+  "name": "@annlite/payments-core",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Provider-agnostic, server-side payment primitives for AnnLite (state machine, webhook signature verification, idempotency, CELO tx verification).",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": ["dist"],
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "test": "node --test \"test/*.test.ts\"",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "lint": "eslint eslint.config.js src test",
+    "build": "tsc -p tsconfig.build.json"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^22.0.0",
+    "eslint": "^10.12.0",
+    "globals": "^17.13.0",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.71.0"
+  }
+}

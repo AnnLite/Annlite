@@ -38,6 +38,17 @@ test("idempotency: second claim is a duplicate and fn runs once", async () => {
   assert.equal(n, 1);
 });
 
+test("idempotency: concurrent claims execute the callback once", async () => {
+  const store = new InMemoryIdempotencyStore();
+  let calls = 0;
+  const results = await Promise.all(
+    Array.from({ length: 10 }, () => once(store, "evt_concurrent", async () => ++calls)),
+  );
+
+  assert.equal(results.filter((result) => !result.duplicate).length, 1);
+  assert.equal(calls, 1);
+});
+
 const RECIPIENT = "0xAbC0000000000000000000000000000000000001";
 const TOKEN = "0xToken000000000000000000000000000000000002";
 const HASH = "0x" + "a".repeat(64);
