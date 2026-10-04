@@ -1,6 +1,6 @@
 <div align="center">
 
-<img width="554" height="554" alt="annlite-logo" src="https://github.com/user-attachments/assets/c81616cd-adc8-4170-8f1b-93986eb3f5b3" />
+<img src="docs/brand/readme-banner.jpg" alt="AnnLite logo and name, its Pray. Learn. Hope. Serve. tagline, and founder Berline Britus." />
 
 
 # AnnLite
