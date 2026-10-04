@@ -77,7 +77,7 @@ jobs:
         if: steps.cloudflare.outputs.configured == 'true'
       - name: Deploy independent annlite.com site
         if: steps.cloudflare.outputs.configured == 'true'
-        uses: cloudflare/wrangler-action@v3
+        uses: cloudflare/wrangler-action@v4
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
