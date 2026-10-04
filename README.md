@@ -17,7 +17,7 @@ in Haitian Creole, French and English.
 [![Status](https://img.shields.io/badge/status-pre--production-orange.svg)](#status)
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
-[Website](https://annlite.com) · [Architecture](docs/architecture/README.md) · [Payments](docs/payments/README.md) · [Roadmap](ROADMAP.md) · [Security](SECURITY.md) · [Contributing](CONTRIBUTING.md)
+[Website](https://annlite.github.io/Annlite/) · [Architecture](docs/architecture/README.md) · [Payments](docs/payments/README.md) · [Roadmap](ROADMAP.md) · [Security](SECURITY.md) · [Contributing](CONTRIBUTING.md)
 
 </div>
 
@@ -42,12 +42,12 @@ AnnLite helps people **pray, read Scripture, grow spiritually and give transpare
 | 🛡️ Administration | Role-based admin dashboard with audit logging |
 
 ## Payments
-AnnLite supports two payment channels behind one server-authoritative backend contract:
+AnnLite is designed for two payment channels behind one server-authoritative backend contract. **Neither provider is connected and AnnLite is not accepting donations yet.**
 
 | Channel | Location | Notes |
 |---|---|---|
-| **CeloHT dApp** — CELO, USDm | [`payments/celoht`](payments/celoht) | Blockchain flow, verified on-chain by the backend. CeloHT is an *integration*, not AnnLite's identity. |
-| **Visa / Mastercard** | [`payments/cards`](payments/cards) | Through a card provider. AnnLite never stores raw card data. |
+| **CeloHT dApp** — CELO, USDm | [`payments/celoht`](payments/celoht) | Planned integration. Production verification is not connected. CeloHT is an *integration*, not AnnLite's identity. |
+| **Visa / Mastercard** | [`payments/cards`](payments/cards) | Planned through a compliant provider. Card payments are not available and AnnLite never collects card details. |
 | **Shared core** | [`payments/core`](payments/core) | Payment state machine, webhook HMAC verification with replay protection, idempotency, on-chain donation verification. **8/8 tests passing.** |
 
 **Golden rule:** a client-side "payment succeeded" message is never proof of payment.
@@ -96,7 +96,9 @@ pnpm lint
 pnpm typecheck
 pnpm test
 pnpm build
+pnpm --filter @annlite/web dev
 ```
+Open the local Vite URL printed by the dev command to try the web experience.
 Quick check of the payment core without installing anything:
 ```bash
 cd payments/core && npm test
@@ -105,8 +107,9 @@ cd payments/core && npm test
 ## Testing
 | Suite | Status |
 |---|---|
+| `apps/web` (navigation, Bible search, local prayer journal, quiz, charity states, accessibility) | ✅ 14/14 passing |
 | `payments/core` (state machine, webhooks, idempotency, CELO/USDm verification) | ✅ 8/8 passing, typecheck clean |
-| web · mobile · admin · backend · database · end-to-end payment flows | ⏳ pending legacy code import |
+| mobile · admin · backend · database · production payment flows | ⏳ pending legacy imports and provider setup |
 
 ## Security
 Server-authoritative payments, signed webhooks with timestamp tolerance, idempotency, RBAC, audit logging, no secrets in Git. Report vulnerabilities **privately** — see [SECURITY.md](SECURITY.md).
@@ -115,7 +118,8 @@ Server-authoritative payments, signed webhooks with timestamp tolerance, idempot
 **Pre-production.** Be aware:
 - No live card provider is connected yet.
 - The Celo smart contract is **unaudited — not for mainnet**.
-- Legacy application code is imported with `scripts/import-legacy.sh` (Git history preserved); until then `apps/*`, `backend` and `database` are placeholders. See [migration map](docs/governance/MIGRATION.md).
+- The web experience in `apps/web` is available as a local-first preview. Its private notes and progress stay in the current browser; they are not synced to a server.
+- Mobile, admin, backend, database, and provider integrations remain placeholders until legacy code is reviewed and imported with `scripts/import-legacy.sh` (Git history preserved). No donations or live charity projects are currently presented. See [migration map](docs/governance/MIGRATION.md).
 
 ## Roadmap
 See [ROADMAP.md](ROADMAP.md).

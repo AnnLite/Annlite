@@ -1,10 +1,12 @@
-# GitHub "About" settings
+# GitHub "About" settings and repository roles
+
+The AnnLite GitHub organization currently has two repositories with distinct responsibilities. Product code lives in one canonical monorepo; organization-wide profile and community-health defaults live in the `.github` repository. Do not describe apps, services, or payment providers as separate active repositories.
 
 ## AnnLite/AnnLite
-**Description:** AnnLite — a Christian platform for prayer, Bible reading, reflection and transparent charitable giving. Web, mobile, admin, API and payments (Visa, Mastercard, CeloHT dApp) in one monorepo.
-**Website:** https://annlite.com
-**Topics:** annlite, christian, christian-app, prayer, bible, charity, donations, transparency, monorepo, typescript, celo, payments, haiti
+**Description:** AnnLite — a Christian platform for prayer, Bible reading, reflection and service. The canonical product monorepo contains the web app and planned mobile, admin, backend, content, and payment modules.
+**Website:** https://annlite.github.io/Annlite/
+**Topics:** annlite, christian, christian-app, prayer, bible, charity, education, monorepo, typescript, haiti
 
 ## AnnLite/.github
-**Description:** Organization profile and community-health files for AnnLite.
+**Description:** AnnLite organization profile and default community-health files (issue templates, pull request guidance, and community policies). No product application or backend code belongs here.
 **Topics:** annlite, community-health, github-profile

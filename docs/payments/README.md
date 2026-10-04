@@ -1,7 +1,16 @@
 # Payments
-Two channels, one backend contract:
-1. **CeloHT dApp** — CELO and USDm (stablecoin). Verified on-chain by the backend. Code: `payments/celoht/`.
-2. **Visa / Mastercard** — through a card provider. AnnLite never stores raw card data. Code: `payments/cards/`.
 
-Shared, tested primitives: `payments/core` (state machine, webhook HMAC verification with replay window, idempotency, on-chain donation verification).
-**Status:** no live provider connected and no mainnet deployment is claimed. See SECURITY.md and docs/governance/MIGRATION.md.
+AnnLite is designed for one donation contract with modular providers. **Payments are not enabled: no card provider or CeloHT production connection is configured, and no donations are currently accepted.**
+
+## Planned providers
+
+- **CeloHT:** CELO and USDm. The future backend must verify chain receipts, recipient, asset, amount, and confirmations. `payments/celoht/` is currently a placeholder.
+- **Cards:** Visa and Mastercard through a compliant third-party provider. Card details must be collected by that provider, never by AnnLite. `payments/cards/` is currently a placeholder.
+
+## Implemented shared primitives
+
+`payments/core/` contains a payment state machine, webhook HMAC verification with a replay window, an idempotency-store contract, and injected-reader chain verification. These are primitives, not a connected payment service. Production persistence, provider adapters, webhooks, and end-to-end payment flows remain unimplemented.
+
+The web app therefore displays disabled/coming-soon payment states, no donation form, and no fabricated totals or transactions. Do not describe a payment as successful until a trusted backend confirms it. Never place private keys or provider secrets in frontend code.
+
+See [the migration map](../governance/MIGRATION.md) and [security overview](../security/README.md).

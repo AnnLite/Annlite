@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://annlite.github.io/Annlite/sitemap.xml
