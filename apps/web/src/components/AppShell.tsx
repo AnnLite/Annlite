@@ -13,6 +13,7 @@ type NavigationItem = { to: string; key: MessageKey; icon: LucideIcon; end?: boo
 const navigation: NavigationItem[] = [
   { to: "/", key: "nav.home", icon: Home, end: true },
   { to: "/bible", key: "nav.bible", icon: BookOpen },
+  { to: "/reflections", key: "nav.reflections", icon: BookOpen },
   { to: "/learn", key: "nav.learn", icon: BookOpen },
   { to: "/pray", key: "nav.pray", icon: Heart },
   { to: "/discover", key: "nav.discover", icon: Compass },
@@ -94,7 +95,7 @@ export function AppShell() {
             <Link className="icon-button account-link" to="/profile" aria-label={t("top.account")}>
               <UserRound size={18} />
             </Link>
-            <Link className="button button--primary header-give" to="/charity">
+            <Link className="button button--primary header-give" to="/donate">
               <Heart size={16} aria-hidden="true" />{t("top.give")}
             </Link>
             <button
@@ -111,7 +112,7 @@ export function AppShell() {
         </div>
         <nav id="mobile-menu" className="mobile-menu" aria-label={t("nav.main")} hidden={!menuOpen}>
             {navigation.map((item) => navLink(item))}
-            <Link className="button button--primary" to="/charity" onClick={() => setMenuOpen(false)}>
+            <Link className="button button--primary" to="/donate" onClick={() => setMenuOpen(false)}>
               <Heart size={16} aria-hidden="true" />{t("top.give")}
             </Link>
         </nav>
@@ -131,8 +132,14 @@ export function AppShell() {
         <p>{t("site.tagline")}</p>
         <nav aria-label={t("site.footerNavigation")}>
           <Link to="/about">{t("nav.about")}</Link>
+          <Link to="/founder">{t("page.founder.title")}</Link>
+          <Link to="/reflections">{t("nav.reflections")}</Link>
           <Link to="/charity">{t("nav.charity")}</Link>
+          <Link to="/donate">{t("top.give")}</Link>
           <Link to="/community">{t("nav.community")}</Link>
+          <Link to="/contact">{t("nav.contact")}</Link>
+          <Link to="/privacy">{t("nav.privacy")}</Link>
+          <Link to="/terms">{t("nav.terms")}</Link>
         </nav>
       </footer>
 

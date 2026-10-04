@@ -12,6 +12,7 @@ const items = [
   { key: "discover.kindness", icon: HeartHandshake, to: "/charity", status: "development" as const },
   { key: "discover.resources", icon: Sparkles, to: "/learn", status: "development" as const },
   { key: "discover.openPrayer", icon: MoonStar, to: "/pray", status: "available" as const, action: "discover.openPrayer" },
+  { key: "nav.reflections", icon: Sparkles, to: "/reflections", status: "available" as const },
 ];
 
 export default function DiscoverPage() {
