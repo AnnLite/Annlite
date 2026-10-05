@@ -116,6 +116,7 @@ function SiteRoutes() {
             <Route path="reflections" element={<ReflectionsPage />} />
             <Route path="learn/*" element={<LearnPage />} />
             <Route path="pray" element={<PrayerPage />} />
+            <Route path="prayer" element={<PrayerPage />} />
             <Route path="discover" element={<DiscoverPage />} />
             <Route path="quiz" element={<QuizPage />} />
             <Route path="community" element={<CommunityPage />} />
