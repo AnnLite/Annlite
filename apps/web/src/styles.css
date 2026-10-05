@@ -8,7 +8,7 @@
   --surface: #ffffff;
   --surface-soft: #eef3ed;
   --ink: #193b37;
-  --muted: #60746d;
+  --muted: #596c64;
   --line: #dce6de;
   --green: #23685b;
   --green-strong: #164d45;
@@ -455,7 +455,7 @@ button { color: inherit; }
 .reader-toolbar__actions .icon-button { width: 36px; height: 36px; border-radius: 10px; }
 .reader-text { max-width: 740px; min-height: 290px; margin: 48px auto 35px; }
 .reader-book { margin: 0 0 26px; color: var(--green); font-size: 13px; font-weight: 750; text-align: center; }
-.reader-book span { padding-left: 6px; color: var(--gold); }
+.reader-book span { padding-left: 6px; color: var(--green-strong); }
 .reader-text blockquote { margin: 0; font-family: "Fraunces Variable", Georgia, serif; font-weight: 430; line-height: 1.72; text-align: center; }
 .reader-text sup { color: var(--gold); font-family: "DM Sans Variable", sans-serif; font-size: .52em; font-weight: 700; }
 .reader-reference { margin: 25px 0 0; color: var(--green); font-size: 13px; font-weight: 750; text-align: center; }
@@ -769,7 +769,7 @@ button { color: inherit; }
 .data-controls .form-status { grid-column: 1 / -1; }
 .not-found-page { display: grid; min-height: 45vh; align-items: center; }
 
-@media (max-width: 1260px) {
+@media (max-width: 1400px) {
   .site-header__inner { gap: 14px; }
   .desktop-nav { gap: 0; }
   .desktop-nav .nav-link { gap: 5px; padding-inline: 7px; font-size: 12px; }

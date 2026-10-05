@@ -18,7 +18,11 @@ jobs:
         with: { node-version: 22, cache: pnpm }
       - run: pnpm install --frozen-lockfile
       - run: pnpm lint
+      - name: Lint Playwright config and specs
+        run: pnpm exec eslint --config apps/web/eslint.config.js --no-ignore playwright.config.ts tests/e2e/public-app.spec.ts
       - run: pnpm typecheck
+      - name: Typecheck Playwright config and specs
+        run: pnpm --dir apps/web exec tsc --noEmit --strict --skipLibCheck --target ES2022 --module ESNext --moduleResolution Bundler --types node ../../playwright.config.ts ../../tests/e2e/public-app.spec.ts
       - run: pnpm test
       - run: pnpm build
       - name: Build GitHub Pages site
@@ -32,9 +36,38 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           path: apps/web/dist
+  e2e:
+    needs: quality
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with: { version: 9.12.0 }
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: pnpm }
+      - run: pnpm install --frozen-lockfile
+      - name: Install Playwright browsers and system dependencies
+        run: pnpm exec playwright install --with-deps chromium firefox webkit
+      - name: Record Playwright and browser versions
+        run: |
+          pnpm exec playwright --version
+          pnpm exec playwright install --list
+      - name: Run browser E2E and accessibility suite
+        run: pnpm test:e2e
+      - name: Preserve Playwright report, screenshots, traces, and videos
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-${{ github.run_id }}
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 14
+          if-no-files-found: warn
   deploy:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    needs: quality
+    needs: [quality, e2e]
     runs-on: ubuntu-latest
     permissions:
       pages: write
@@ -47,7 +80,7 @@ jobs:
         uses: actions/deploy-pages@v4
   deploy-custom-domain:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    needs: quality
+    needs: [quality, e2e]
     runs-on: ubuntu-latest
     steps:
       - name: Check Cloudflare credentials
