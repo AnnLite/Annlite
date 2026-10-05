@@ -86,8 +86,10 @@ function RouteMetadata() {
     const course = root === "learn" ? getCourse(courseSlug) : undefined;
     const lesson = course && lessonSlug ? getLesson(course, lessonSlug) : undefined;
     const pageMeta = customPageMeta[pathname];
-    const title = lesson?.title[locale] ?? course?.title[locale] ?? pageMeta?.title ?? t(pageTitles[pathname] ?? "page.notFound.title");
-    const description = lesson?.introduction[locale] ?? course?.description[locale] ?? pageMeta?.description ?? t(pageDescriptions[pathname] ?? "page.notFound.description");
+    const customTitle = locale === "en" ? pageMeta?.title : undefined;
+    const customDescription = locale === "en" ? pageMeta?.description : undefined;
+    const title = lesson?.title[locale] ?? course?.title[locale] ?? customTitle ?? t(pageTitles[pathname] ?? "page.notFound.title");
+    const description = lesson?.introduction[locale] ?? course?.description[locale] ?? customDescription ?? t(pageDescriptions[pathname] ?? "page.notFound.description");
     const canonicalUrl = `${siteUrl}${pathname === "/" ? "/" : pathname}`;
     document.title = `${title} · AnnLite`;
     document.documentElement.lang = localeTags[locale];

@@ -22,6 +22,33 @@ describe("AnnLite web experience", () => {
     }
   });
 
+  test("Founder profile keeps its verified origin, localized story, and exact contact links", async () => {
+    const user = userEvent.setup();
+    localStorage.setItem("annlite.locale", JSON.stringify("en"));
+    await renderAt("/founder");
+
+    expect(screen.getByRole("heading", { level: 1, name: "Berline Britus" })).toBeInTheDocument();
+    expect(screen.getByText("Aquin, Southern Department, Haiti")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "The Story Behind AnnLite" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Skills & Experience" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Faith & Service" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Her Vision for AnnLite" })).toBeInTheDocument();
+    expect(screen.getAllByRole("link", { name: "Email the Founder" }).every((link) => link.getAttribute("href") === "mailto:britusberline46@gmail.com")).toBe(true);
+    const linkedIn = screen.getAllByRole("link", { name: "Connect with the Founder on LinkedIn" });
+    expect(linkedIn[0]).toHaveAttribute("href", "https://www.linkedin.com/in/britus-berline-86329a441");
+    expect(linkedIn[0]).toHaveAttribute("rel", "noopener noreferrer");
+
+    await user.selectOptions(screen.getByRole("combobox", { name: "Language" }), "fr");
+    expect(screen.getByRole("heading", { name: "L’histoire derrière AnnLite" })).toBeInTheDocument();
+    expect(screen.getByText("Aquin, département du Sud, Haïti")).toBeInTheDocument();
+    expect(document.title).toContain("Rencontrer la fondatrice");
+
+    await user.selectOptions(screen.getByRole("combobox", { name: "Langue" }), "ht");
+    expect(screen.getByRole("heading", { name: "Istwa ki dèyè AnnLite" })).toBeInTheDocument();
+    expect(screen.getByText("Aken, Depatman Sid, Ayiti")).toBeInTheDocument();
+    expect(document.title).toContain("Rankontre fondatris la");
+  });
+
   test("home offers working Bible navigation and has no basic axe violations", async () => {
     const user = userEvent.setup();
     await renderAt();

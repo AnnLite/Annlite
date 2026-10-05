@@ -223,11 +223,24 @@ test("CeloHT destination is correct and card donation sandbox states are explici
 test("founder and contact information are displayed and contact drafts validate locally", async ({ page }) => {
   await openFromHome(page, "/founder");
   await expect(page.getByRole("heading", { level: 1, name: "Berline Britus" })).toBeVisible();
-  await expect(page.getByText("Lazil, Southern Haiti")).toBeVisible();
+  await expect(page.getByText("Aquin, Southern Department, Haiti")).toBeVisible();
+  await expect(page.getByRole("heading", { name: "The Story Behind AnnLite" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "About the Founder" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Skills & Experience" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Faith & Service" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Her Vision for AnnLite" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Contact the Founder" })).toBeVisible();
   await expect(page.locator('a[href="mailto:britusberline46@gmail.com"]').first()).toBeVisible();
+  const founderLinkedIn = page.getByRole("link", { name: "Connect with the Founder on LinkedIn" }).first();
+  await expect(founderLinkedIn).toHaveAttribute("href", "https://www.linkedin.com/in/britus-berline-86329a441");
+  await expect(founderLinkedIn).toHaveAttribute("target", "_blank");
+  await expect(founderLinkedIn).toHaveAttribute("rel", "noopener noreferrer");
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", /\/founder$/);
+  await expect(page.locator('meta[property="og:title"]')).toHaveAttribute("content", /Berline Britus — Founder of AnnLite/);
 
   await page.goto("/contact");
   await expect(page.getByText("britusberline46@gmail.com").first()).toBeVisible();
+  await expect(page.getByRole("link", { name: "Connect with the Founder on LinkedIn" })).toHaveAttribute("href", "https://www.linkedin.com/in/britus-berline-86329a441");
   const name = page.getByLabel("Your name");
   const email = page.getByLabel("Your email address");
   const subject = page.getByLabel("Subject");
@@ -261,6 +274,9 @@ test("supported languages translate navigation, learning, donation, and contact 
   await expect(page.getByRole("heading", { name: "Donner avec CeloHT" })).toBeVisible();
   await page.goto("/contact");
   await expect(page.getByLabel("Votre nom")).toBeVisible();
+  await page.goto("/founder");
+  await expect(page.getByRole("heading", { name: "L’histoire derrière AnnLite" })).toBeVisible();
+  await expect(page.getByText("Aquin, département du Sud, Haïti")).toBeVisible();
 
   await page.getByLabel("Langue").selectOption("ht");
   await expect(page.locator(".header-give")).toContainText("Bay");
@@ -270,9 +286,12 @@ test("supported languages translate navigation, learning, donation, and contact 
   await expect(page.getByRole("heading", { name: "Bay avèk CeloHT" })).toBeVisible();
   await page.goto("/contact");
   await expect(page.getByLabel("Non ou")).toBeVisible();
+  await page.goto("/founder");
+  await expect(page.getByRole("heading", { name: "Istwa ki dèyè AnnLite" })).toBeVisible();
+  await expect(page.getByText("Aken, Depatman Sid, Ayiti")).toBeVisible();
 
   const untranslatedKey = /\b(?:page|nav|home|pray|learn|donate|charity|founder|contact)\.[a-z][\w.]*/i;
-  for (const route of ["/", "/learn", "/donate", "/contact"]) {
+  for (const route of ["/", "/learn", "/donate", "/contact", "/founder"]) {
     await page.goto(route);
     await expect(page.locator("body")).not.toContainText(untranslatedKey);
   }

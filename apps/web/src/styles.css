@@ -323,7 +323,7 @@ button { color: inherit; }
 .founder-feature {
   display: grid;
   grid-template-columns: 92px minmax(0, 1fr);
-  align-items: center;
+  align-items: start;
   gap: 16px;
   padding: 12px;
   border: 1px solid var(--line);
@@ -336,10 +336,12 @@ button { color: inherit; }
 }
 .founder-feature:hover { transform: translateY(-2px); border-color: var(--gold); }
 .founder-feature img { width: 92px; height: 116px; border-radius: 11px; object-fit: cover; object-position: center 14%; }
-.founder-feature__copy { display: grid; gap: 8px; }
+.founder-feature__copy { display: grid; gap: 7px; }
 .founder-feature__copy .eyebrow { font-size: 10px; }
 .founder-feature__copy strong { font-family: "Fraunces Variable", Georgia, serif; font-size: 20px; font-weight: 550; }
-.founder-feature__copy > span:last-child { display: inline-flex; align-items: center; gap: 5px; color: var(--green); font-size: 12px; font-weight: 700; }
+.founder-feature__role { color: var(--muted); font-size: 12px; }
+.founder-feature__excerpt { color: var(--muted); font-size: 11px; line-height: 1.5; }
+.founder-feature__action { display: inline-flex; align-items: center; gap: 5px; color: var(--green); font-size: 12px; font-weight: 700; }
 .home-columns { display: grid; grid-template-columns: minmax(0, 1fr) 292px; align-items: start; gap: 44px; }
 .home-primary-column { min-width: 0; }
 .journey-section { padding: 25px 0 35px; border-top: 1px solid var(--line); }
@@ -746,6 +748,45 @@ button { color: inherit; }
 .founder-facts { margin-top: 33px; padding: 24px; box-shadow: none; }
 .founder-facts h2 { margin-top: 0; font-size: 24px; }
 .founder-facts p { margin-bottom: 0; font-size: 14px; }
+.founder-page { display: grid; gap: 0; }
+.founder-hero { display: grid; grid-template-columns: minmax(240px, 340px) minmax(0, 1fr); align-items: stretch; gap: 22px; }
+.founder-portrait--page { grid-template-rows: minmax(300px, 1fr) auto; }
+.founder-portrait--page img { min-height: 340px; max-height: 480px; }
+.founder-portrait figcaption small { line-height: 1.45; }
+.founder-intro { display: flex; flex-direction: column; justify-content: center; padding: clamp(23px, 4vw, 42px); }
+.founder-intro h2 { margin: 8px 0 12px; font-family: "Fraunces Variable", Georgia, serif; font-size: 31px; font-weight: 530; }
+.founder-intro > p:not(.eyebrow) { max-width: 620px; color: var(--muted); font-size: 16px; line-height: 1.7; }
+.founder-hero__actions { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 15px; }
+.founder-hero__actions .button { min-height: 43px; }
+.founder-section { margin-top: 42px; }
+.founder-section__heading { margin-bottom: 15px; }
+.founder-section__heading h2 { margin: 0; font-family: "Fraunces Variable", Georgia, serif; font-size: 27px; font-weight: 530; }
+.founder-story-copy { display: grid; gap: 15px; padding: clamp(20px, 3vw, 32px); }
+.founder-story-copy p { max-width: 900px; margin: 0; color: var(--muted); font-size: 14px; line-height: 1.75; }
+.founder-bio-panel { padding: 22px 25px; box-shadow: none; }
+.founder-bio-panel p { max-width: 900px; margin: 0; color: var(--muted); font-size: 15px; line-height: 1.75; }
+.skills-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.skill-card { min-width: 0; min-height: 142px; padding: 17px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+.skill-card__icon { display: inline-flex; color: var(--green); }
+.skill-card h3 { margin: 9px 0 6px; font-size: 14px; line-height: 1.35; }
+.skill-card p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.55; }
+.founder-section--split { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 15px; }
+.founder-story { min-width: 0; padding: clamp(20px, 3vw, 28px); box-shadow: none; }
+.founder-story h2 { margin: 8px 0 12px; font-family: "Fraunces Variable", Georgia, serif; font-size: 25px; font-weight: 530; }
+.founder-story > p:not(.eyebrow) { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.7; }
+.founder-story--faith { border-color: color-mix(in srgb, var(--green) 25%, var(--line)); background: var(--green-wash); }
+.founder-vision-values { display: flex; flex-wrap: wrap; gap: 7px; margin: 16px 0 0; padding: 0; list-style: none; }
+.founder-vision-values li { padding: 6px 9px; border: 1px solid var(--line); border-radius: 8px; color: var(--green-strong); background: var(--surface); font-size: 11px; font-weight: 650; }
+.founder-contact-panel { margin-top: 42px; padding: 24px; }
+.founder-contact-panel__body { display: grid; grid-template-columns: minmax(140px, .8fr) minmax(230px, 1fr) auto; align-items: center; gap: 13px 18px; }
+.founder-contact-name, .founder-contact-role { margin: 0; }
+.founder-contact-name { font-weight: 700; }
+.founder-contact-role { margin-top: 4px; color: var(--muted); font-size: 12px; }
+.founder-contact-email, .founder-contact-linkedin, .contact-direct__linkedin { display: inline-flex; min-width: 0; align-items: center; gap: 8px; color: var(--green); font-size: 13px; font-weight: 650; text-decoration-thickness: 1px; text-underline-offset: 3px; overflow-wrap: anywhere; }
+.founder-contact-email svg, .founder-contact-linkedin svg, .contact-direct__linkedin svg { flex: 0 0 auto; }
+.founder-contact-callout { white-space: normal; }
+.founder-contact-linkedin { grid-column: 2 / -1; }
+.contact-direct__linkedin { margin-top: 4px; }
 .privacy-card { display: grid; grid-template-columns: 34px 1fr; align-items: start; gap: 13px; padding: 19px; color: var(--green); background: var(--green-wash); box-shadow: none; }
 .privacy-card h2 { margin: 0; color: var(--ink); font-size: 14px; font-weight: 650; line-height: 1.55; }
 .privacy-card p { margin: 7px 0 0; color: var(--muted); font-size: 12px; }
@@ -791,6 +832,11 @@ button { color: inherit; }
   .mobile-menu .nav-link { justify-content: flex-start; padding-inline: 11px; }
   .mobile-menu .button { grid-column: 1 / -1; }
   .home-intro { grid-template-columns: minmax(0, 1fr) 280px; gap: 24px; }
+  .founder-hero { grid-template-columns: minmax(220px, 280px) minmax(0, 1fr); gap: 17px; }
+  .founder-portrait--page img { min-height: 320px; }
+  .founder-contact-panel__body { grid-template-columns: minmax(130px, .7fr) minmax(200px, 1fr); }
+  .founder-contact-callout { grid-column: 1; justify-self: start; }
+  .founder-contact-linkedin { grid-column: 2; grid-row: 2; }
   .home-columns { grid-template-columns: minmax(0, 1fr) 250px; gap: 28px; }
   .journey-list { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .journey-step { min-height: 98px; }
@@ -824,6 +870,28 @@ button { color: inherit; }
   .founder-feature { width: min(100%, 390px); grid-template-columns: 70px 1fr; padding: 9px; }
   .founder-feature img { width: 70px; height: 82px; }
   .founder-feature__copy strong { font-size: 17px; }
+  .founder-hero { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+  .founder-portrait--page { width: min(100%, 390px); }
+  .founder-portrait--page img { min-height: 0; height: 360px; }
+  .founder-intro { padding: 21px; }
+  .founder-intro h2 { font-size: 26px; }
+  .founder-intro > p:not(.eyebrow) { font-size: 14px; }
+  .founder-hero__actions { align-items: stretch; }
+  .founder-hero__actions .button { flex: 1 1 180px; }
+  .founder-section { margin-top: 30px; }
+  .founder-section__heading h2 { font-size: 23px; }
+  .founder-story-copy { gap: 12px; padding: 18px; }
+  .founder-story-copy p, .founder-bio-panel p { font-size: 13px; }
+  .founder-bio-panel { padding: 18px; }
+  .skills-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .skill-card { min-height: 150px; padding: 13px; }
+  .skill-card h3 { font-size: 13px; }
+  .skill-card p { font-size: 11px; }
+  .founder-section--split { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+  .founder-story { padding: 19px; }
+  .founder-contact-panel { margin-top: 30px; padding: 18px; }
+  .founder-contact-panel__body { display: flex; align-items: flex-start; flex-direction: column; gap: 13px; }
+  .founder-contact-linkedin { max-width: 100%; }
   .home-columns { grid-template-columns: minmax(0, 1fr); gap: 15px; }
   .journey-section { padding: 22px 0 27px; }
   .journey-section .section-heading { display: grid; grid-template-columns: 1fr auto; }

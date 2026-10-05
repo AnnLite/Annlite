@@ -1,9 +1,10 @@
 import { useState, type FormEvent } from "react";
-import { Mail } from "lucide-react";
+import { Linkedin, Mail } from "lucide-react";
 import { useApp } from "../state/AppProvider";
 import { Button, PageHeading, Panel } from "../components/ui";
 
 const FOUNDER_EMAIL = "britusberline46@gmail.com";
+const FOUNDER_LINKEDIN = "https://www.linkedin.com/in/britus-berline-86329a441";
 
 export default function ContactPage() {
   const { t } = useApp();
@@ -33,6 +34,9 @@ export default function ContactPage() {
         <p className="contact-direct__meta">{t("contact.founderRole")}</p>
         <a className="contact-direct__email" href={`mailto:${FOUNDER_EMAIL}`} aria-label="Email Berline Britus">
           <Mail size={16} aria-hidden="true" />{FOUNDER_EMAIL}
+        </a>
+        <a className="contact-direct__linkedin" href={FOUNDER_LINKEDIN} target="_blank" rel="noopener noreferrer">
+          <Linkedin size={16} aria-hidden="true" />{t("contact.linkedin")}
         </a>
       </Panel>
 
