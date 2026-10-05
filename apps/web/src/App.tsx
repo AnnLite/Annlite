@@ -66,6 +66,17 @@ const siteUrl = import.meta.env.BASE_URL === "/Annlite/"
   ? "https://annlite.github.io/Annlite"
   : "https://annlite.com";
 
+const customPageMeta: Record<string, { title: string; description: string }> = {
+  "/founder": {
+    title: "Berline Britus — Founder of AnnLite",
+    description: "Learn about Berline Britus, Founder of AnnLite, her Christian faith, practical skills, community service, and vision for AnnLite.",
+  },
+  "/contact": {
+    title: "Contact Berline Britus — Founder of AnnLite",
+    description: "Contact Berline Britus, Founder of AnnLite, at britusberline46@gmail.com.",
+  },
+};
+
 function RouteMetadata() {
   const { pathname } = useLocation();
   const { locale, t } = useApp();
@@ -74,16 +85,20 @@ function RouteMetadata() {
     const [root, courseSlug, lessonSlug] = pathname.split("/").filter(Boolean);
     const course = root === "learn" ? getCourse(courseSlug) : undefined;
     const lesson = course && lessonSlug ? getLesson(course, lessonSlug) : undefined;
-    const title = lesson?.title[locale] ?? course?.title[locale] ?? t(pageTitles[pathname] ?? "page.notFound.title");
-    const description = lesson?.introduction[locale] ?? course?.description[locale] ?? t(pageDescriptions[pathname] ?? "page.notFound.description");
+    const pageMeta = customPageMeta[pathname];
+    const title = lesson?.title[locale] ?? course?.title[locale] ?? pageMeta?.title ?? t(pageTitles[pathname] ?? "page.notFound.title");
+    const description = lesson?.introduction[locale] ?? course?.description[locale] ?? pageMeta?.description ?? t(pageDescriptions[pathname] ?? "page.notFound.description");
+    const canonicalUrl = `${siteUrl}${pathname === "/" ? "/" : pathname}`;
     document.title = `${title} · AnnLite`;
     document.documentElement.lang = localeTags[locale];
     document.querySelector('meta[name="description"]')?.setAttribute("content", description);
     document.querySelector('meta[property="og:title"]')?.setAttribute("content", `${title} · AnnLite`);
     document.querySelector('meta[property="og:description"]')?.setAttribute("content", description);
+    document.querySelector('meta[property="og:url"]')?.setAttribute("content", canonicalUrl);
     document.querySelector('meta[name="twitter:title"]')?.setAttribute("content", `${title} · AnnLite`);
     document.querySelector('meta[name="twitter:description"]')?.setAttribute("content", description);
-    document.querySelector('link[rel="canonical"]')?.setAttribute("href", `${siteUrl}${pathname === "/" ? "/" : pathname}`);
+    document.querySelector('meta[name="twitter:url"]')?.setAttribute("content", canonicalUrl);
+    document.querySelector('link[rel="canonical"]')?.setAttribute("href", canonicalUrl);
     const structuredData = document.getElementById("learn-structured-data");
     if (course) {
       const metadata = lesson

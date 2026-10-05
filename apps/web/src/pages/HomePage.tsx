@@ -40,7 +40,7 @@ export default function HomePage() {
             <LinkButton to="/pray" variant="secondary">{t("home.pray")}<ArrowDownRight size={17} aria-hidden="true" /></LinkButton>
           </div>
         </div>
-        <Link to="/about" className="founder-feature">
+        <Link to="/founder" className="founder-feature" aria-label={t("home.meetFounder")}>
           <img src={portrait} alt="Berline Britus, founder of AnnLite" />
           <span className="founder-feature__copy">
             <span className="eyebrow">{t("home.founderTitle")}</span>

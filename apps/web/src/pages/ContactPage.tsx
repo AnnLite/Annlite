@@ -25,6 +25,17 @@ export default function ContactPage() {
   return (
     <div className="app-page">
       <PageHeading title={t("page.contact.title")} description={t("page.contact.description")} />
+
+      <Panel className="contact-direct-panel">
+        <p className="eyebrow">{t("contact.founderEyebrow")}</p>
+        <h2>{t("contact.founderTitle")}</h2>
+        <p className="contact-direct__meta">Berline Britus</p>
+        <p className="contact-direct__meta">{t("contact.founderRole")}</p>
+        <a className="contact-direct__email" href={`mailto:${FOUNDER_EMAIL}`} aria-label="Email Berline Britus">
+          <Mail size={16} aria-hidden="true" />{FOUNDER_EMAIL}
+        </a>
+      </Panel>
+
       <Panel className="contact-panel">
         <form className="contact-form" onSubmit={prepareEmail}>
           <label className="field-label" htmlFor="contact-name">{t("contact.name")}</label>
