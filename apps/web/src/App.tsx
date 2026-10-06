@@ -4,6 +4,7 @@ import { PageHeading } from "./components/ui";
 import { AppShell } from "./components/AppShell";
 import { getCourse, getLesson } from "./content/learn";
 import { localeTags, type MessageKey } from "./i18n";
+import { trackPageView } from "./lib/analytics";
 import { AppProvider, useApp } from "./state/AppProvider";
 
 const HomePage = lazy(() => import("./pages/HomePage"));
@@ -101,6 +102,13 @@ function RouteMetadata() {
     document.querySelector('meta[name="twitter:description"]')?.setAttribute("content", description);
     document.querySelector('meta[name="twitter:url"]')?.setAttribute("content", canonicalUrl);
     document.querySelector('link[rel="canonical"]')?.setAttribute("href", canonicalUrl);
+    trackPageView({
+      path: pathname,
+      locale,
+      title,
+      description,
+      url: canonicalUrl,
+    });
     const structuredData = document.getElementById("learn-structured-data");
     if (course) {
       const metadata = lesson
