@@ -5,10 +5,10 @@
   "type": "module",
   "description": "Provider-agnostic, server-side payment primitives for AnnLite (state machine, webhook signature verification, idempotency, CELO tx verification).",
   "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "types": "./src/index.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
+      "types": "./src/index.ts",
       "import": "./dist/index.js"
     }
   },
