@@ -42,6 +42,26 @@ function readJsonBody(req: import("node:http").IncomingMessage): Promise<Record<
   });
 }
 
+function sanitizeErrorMessage(error: unknown, fallback: string) {
+  const raw = error instanceof Error ? error.message : typeof error === "string" ? error : fallback;
+  const safe = String(raw)
+    .replace(/[\u0000-\u001F\u007F]+/g, " ")
+    .replace(/[<>&"']/g, (char) => ({
+      "<": "&lt;",
+      ">": "&gt;",
+      "&": "&amp;",
+      '"': "&quot;",
+      "'": "&#39;",
+    }[char] ?? char));
+
+  return safe.trim().slice(0, 255) || fallback;
+}
+
+function emitJsonError(res: import("node:http").ServerResponse, statusCode: number, error: unknown, fallback: string) {
+  res.writeHead(statusCode, withCors({ "Content-Type": "application/json; charset=utf-8" }, config.corsOrigin));
+  res.end(JSON.stringify({ error: sanitizeErrorMessage(error, fallback) }));
+}
+
 const server = createServer(async (req, res) => {
   const url = new URL(req.url ?? "/", "http://localhost");
 
@@ -110,8 +130,7 @@ const server = createServer(async (req, res) => {
       log("info", "admin login successful", { email: user.email, role: user.role });
       return;
     } catch (error) {
-      res.writeHead(401, withCors({ "Content-Type": "application/json" }, config.corsOrigin));
-      res.end(JSON.stringify({ error: error instanceof Error ? error.message : "Unauthorized" }));
+      emitJsonError(res, 401, error, "Unauthorized");
       log("warn", "admin login failed");
       return;
     }
@@ -129,8 +148,7 @@ const server = createServer(async (req, res) => {
       res.end(JSON.stringify({ user: { email: claims.email, role: claims.role, sub: claims.sub } }));
       return;
     } catch (error) {
-      res.writeHead(401, withCors({ "Content-Type": "application/json" }, config.corsOrigin));
-      res.end(JSON.stringify({ error: error instanceof Error ? error.message : "Unauthorized" }));
+      emitJsonError(res, 401, error, "Unauthorized");
       return;
     }
   }
@@ -159,8 +177,7 @@ const server = createServer(async (req, res) => {
       );
       return;
     } catch (error) {
-      res.writeHead(403, withCors({ "Content-Type": "application/json" }, config.corsOrigin));
-      res.end(JSON.stringify({ error: error instanceof Error ? error.message : "Forbidden" }));
+      emitJsonError(res, 403, error, "Forbidden");
       return;
     }
   }

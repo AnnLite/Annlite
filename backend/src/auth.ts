@@ -116,8 +116,23 @@ export function parseBearerToken(headerValue?: string | null) {
     return null;
   }
 
-  const match = /^Bearer\s+(.+)$/i.exec(headerValue.trim());
-  return match ? match[1] : null;
+  const rawValue = headerValue.trim();
+  if (!rawValue) {
+    return null;
+  }
+
+  const prefix = "Bearer ";
+  const lowerValue = rawValue.toLowerCase();
+  if (!lowerValue.startsWith(prefix.toLowerCase()) || rawValue.length <= prefix.length) {
+    return null;
+  }
+
+  const token = rawValue.slice(prefix.length).trim();
+  if (!token || /[\r\n\t<>"']/.test(token)) {
+    return null;
+  }
+
+  return token;
 }
 
 export function verifyAdminCredentials(email: string, password: string) {

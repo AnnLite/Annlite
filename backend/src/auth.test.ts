@@ -5,6 +5,7 @@ import {
   ADMIN_ROLES,
   authorize,
   createAdminToken,
+  parseBearerToken,
   verifyAdminToken,
 } from "./auth.js";
 
@@ -34,4 +35,12 @@ test("authorizes users by exact role and denies forbidden roles", () => {
   assert.doesNotThrow(() => authorize(token, ["support"]));
   assert.throws(() => authorize(token, ["super_admin"]), /role/i);
   assert.throws(() => authorize("not-a-token", ["support"]), /token|invalid/i);
+});
+
+test("parseBearerToken only accepts a clean bearer token", () => {
+  assert.equal(parseBearerToken("Bearer abc123"), "abc123");
+  assert.equal(parseBearerToken(" bearer  abc123  "), "abc123");
+  assert.equal(parseBearerToken("Basic abc123"), null);
+  assert.equal(parseBearerToken("Bearer \r\n<script>alert(1)</script>"), null);
+  assert.equal(parseBearerToken("Bearer "), null);
 });
