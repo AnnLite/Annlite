@@ -146,7 +146,7 @@ describe("AnnLite web experience", () => {
 
   test("charity does not present payments or project data as live", async () => {
     await renderAt("/charity");
-    expect(screen.getByText("Charity projects are being prepared.")).toBeInTheDocument();
+    expect(screen.getByText("Charity projects are being prepared with care.")).toBeInTheDocument();
     expect(screen.getByText("Donations are not currently being accepted through AnnLite.")).toBeInTheDocument();
     expect(screen.getByText(/Production verification is not connected/)).toBeInTheDocument();
     expect(screen.queryByText(/\$[0-9]/)).not.toBeInTheDocument();
@@ -182,7 +182,7 @@ describe("AnnLite web experience", () => {
       ["Learn", "Learn at your own pace"],
       ["Pray", "Take a moment to pray"],
       ["Discover", "Meaningful things to explore"],
-      ["Community", "A safer community, in time"],
+      ["Community", "A safer community"],
       ["Charity", "Faith becomes action"],
       ["About", "A place for faith and everyday life"],
     ];
