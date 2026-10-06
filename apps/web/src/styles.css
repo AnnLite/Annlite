@@ -193,6 +193,53 @@ button { color: inherit; }
   font-size: 13px;
   text-align: center;
 }
+.trust-banner {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--line);
+  background: linear-gradient(90deg, var(--green-wash), var(--gold-wash));
+  color: var(--green-strong);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-align: center;
+}
+.trust-banner__label {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 9px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.55);
+}
+.trust-callout {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 24px;
+  padding: 16px 18px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: linear-gradient(120deg, var(--green-wash), var(--surface));
+  color: var(--ink);
+}
+.trust-callout__icon {
+  display: grid;
+  width: 36px;
+  height: 36px;
+  place-items: center;
+  border-radius: 10px;
+  color: var(--green-strong);
+  background: rgba(255, 255, 255, 0.6);
+}
+.trust-callout p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
 .main-content {
   width: min(100% - 56px, 1300px);
   min-height: calc(100vh - 190px);

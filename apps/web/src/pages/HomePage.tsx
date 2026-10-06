@@ -1,4 +1,4 @@
-import { ArrowDownRight, ArrowRight, BookOpen, Check, Heart, Leaf, MoonStar, Sparkles } from "lucide-react";
+import { ArrowDownRight, ArrowRight, BookOpen, Check, Heart, Leaf, MoonStar, ShieldCheck, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 import portrait from "../../../../docs/brand/berline-britus.jpg";
 import { scripture } from "../content/catalog";
@@ -51,6 +51,11 @@ export default function HomePage() {
           </span>
         </Link>
       </section>
+
+      <div className="trust-callout" aria-live="polite">
+        <span className="trust-callout__icon" aria-hidden="true"><ShieldCheck size={18} /></span>
+        <p>{t("site.trustMessage")}</p>
+      </div>
 
       <div className="home-columns">
         <div className="home-primary-column">

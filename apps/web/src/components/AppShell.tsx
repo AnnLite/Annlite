@@ -60,6 +60,10 @@ export function AppShell() {
   return (
     <>
       <a className="skip-link" href="#main-content">{t("app.skip")}</a>
+      <div className="trust-banner" role="status" aria-live="polite">
+        <span className="trust-banner__label">{t("site.trustLabel")}</span>
+        <span>{t("site.trustMessage")}</span>
+      </div>
       <header className="site-header">
         <div className="site-header__inner">
           <Link className="brand" to="/" aria-label={t("site.brandHome")}>
