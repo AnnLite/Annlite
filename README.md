@@ -111,6 +111,21 @@ cd payments/core && npm test
 | `payments/core` (state machine, webhooks, idempotency, CELO/USDm verification) | ✅ 8/8 passing, typecheck clean |
 | mobile · admin · backend · database · production payment flows | ⏳ pending legacy imports and provider setup |
 
+## Production readiness stack
+AnnLite is being shaped to meet the standards expected of a global digital public-interest project. The foundation now includes clear boundaries for backend services, payment integration, admin controls, security policy, monitoring, analytics, and legal/protection documentation.
+
+| Capability | Status | Notes |
+|---|---|---|
+| Backend API foundation | ✅ scaffolded | Central API boundary for auth, payments, charity, content, and webhook processing |
+| Payment provider model | ✅ documented | CeloHT and card flows are explicit and separated from AnnLite’s public UI |
+| Security baseline | ✅ documented | Threat model, private reporting, secrets handling, RBAC targets, and audit logging |
+| Monitoring & observability | ✅ planned | Health checks, structured logs, metrics, and alerting playbooks |
+| Admin controls | ✅ scaffolded | Role-based admin dashboard and audit-log entry points are documented |
+| Analytics | ✅ privacy-first | Event tracking is opt-in and respects browser-local privacy boundaries |
+| Legal & compliance | ✅ documented | Terms, privacy, and governance references are included |
+
+See [backend](backend/README.md), [docs/operations/monitoring.md](docs/operations/monitoring.md), [docs/legal/README.md](docs/legal/README.md), and [docs/governance/MIGRATION.md](docs/governance/MIGRATION.md).
+
 ## Security
 Server-authoritative payments, signed webhooks with timestamp tolerance, idempotency, RBAC, audit logging, no secrets in Git. Report vulnerabilities **privately** — see [SECURITY.md](SECURITY.md).
 
