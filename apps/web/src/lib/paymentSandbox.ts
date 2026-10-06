@@ -1,58 +1,36 @@
-export type CardNetwork = "Mastercard" | "Visa";
-export type PaymentState = "created" | "pending" | "succeeded" | "failed" | "cancelled";
+export type DonationMethod = "card" | "celoht";
 
-export type SandboxPaymentIntent = {
-  id: string;
+export type DonationValidationResult = {
+  valid: boolean;
   amount: number;
-  currency: string;
-  network: CardNetwork;
-  status: PaymentState;
-  provider: "sandbox";
-  checkoutUrl: string;
-  reference: string;
-  idempotencyKey: string;
-  createdAt: string;
-  updatedAt: string;
+  message: string;
 };
 
-export function createSandboxPaymentIntent({ amount, network, currency = "USD" }: { amount: number; network: CardNetwork; currency?: string }): SandboxPaymentIntent {
-  const safeAmount = Number.isFinite(amount) ? Math.max(1, amount) : 1;
-  const createdAt = new Date().toISOString();
-  const id = `sandbox_${Math.random().toString(36).slice(2, 10)}`;
+export function validateDonationAmount(value: string): DonationValidationResult {
+  const trimmed = value.trim();
 
-  return {
-    id,
-    amount: Number(safeAmount.toFixed(2)),
-    currency,
-    network,
-    status: "created",
-    provider: "sandbox",
-    checkoutUrl: "/donate",
-    reference: `SANDBOX-${Date.now().toString(36).toUpperCase()}`,
-    idempotencyKey: `${id}:${currency}:${network}`,
-    createdAt,
-    updatedAt: createdAt,
-  };
-}
+  if (!trimmed) {
+    return { valid: false, amount: 0, message: "Enter a donation amount." };
+  }
 
-export function markSandboxPaymentPending(intent: SandboxPaymentIntent): SandboxPaymentIntent {
-  return { ...intent, status: "pending", updatedAt: new Date().toISOString() };
-}
+  const parsed = Number(trimmed);
+  if (!Number.isFinite(parsed) || parsed <= 0) {
+    return { valid: false, amount: 0, message: "Enter a valid donation amount greater than zero." };
+  }
 
-export function completeSandboxPayment(intent: SandboxPaymentIntent): SandboxPaymentIntent {
-  return { ...intent, status: "succeeded", updatedAt: new Date().toISOString() };
-}
+  if (parsed > 10000) {
+    return { valid: false, amount: 0, message: "Donation amounts above $10,000 are not supported." };
+  }
 
-export function cancelSandboxPayment(intent: SandboxPaymentIntent): SandboxPaymentIntent {
-  return { ...intent, status: "cancelled", updatedAt: new Date().toISOString() };
-}
+  const rounded = Number(parsed.toFixed(2));
+  if (!Number.isFinite(rounded)) {
+    return { valid: false, amount: 0, message: "Enter a valid donation amount with up to two decimal places." };
+  }
 
-export function failSandboxPayment(intent: SandboxPaymentIntent): SandboxPaymentIntent {
-  return { ...intent, status: "failed", updatedAt: new Date().toISOString() };
+  return { valid: true, amount: rounded, message: "" };
 }
 
 export function sanitizeDonationAmount(value: string): number {
-  const parsed = Number(value);
-  if (!Number.isFinite(parsed)) return 0;
-  return Math.min(10000, Math.max(1, Number(parsed.toFixed(2))));
+  const result = validateDonationAmount(value);
+  return result.valid ? result.amount : 0;
 }

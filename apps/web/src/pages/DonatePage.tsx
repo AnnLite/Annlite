@@ -1,127 +1,177 @@
 import { ArrowRight, ArrowUpRight, CreditCard, HeartHandshake, ShieldCheck } from "lucide-react";
-import { useMemo, useState, type FormEvent } from "react";
+import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button, PageHeading, Panel, StatusBadge } from "../components/ui";
-import { completeSandboxPayment, createSandboxPaymentIntent, cancelSandboxPayment, failSandboxPayment, type CardNetwork, sanitizeDonationAmount, markSandboxPaymentPending } from "../lib/paymentSandbox";
+import { sanitizeDonationAmount, validateDonationAmount, type DonationMethod } from "../lib/paymentSandbox";
 import { useApp } from "../state/AppProvider";
 
 const CELOHT_URL = "https://app.celoht.com/";
-const cardNetworks: CardNetwork[] = ["Mastercard", "Visa"];
+const presetAmounts = [10, 25, 50, 100];
+const currencyFormatter = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
 export default function DonatePage() {
   const { t } = useApp();
+  const [selectedMethod, setSelectedMethod] = useState<DonationMethod>("celoht");
   const [amount, setAmount] = useState("25");
-  const [network, setNetwork] = useState<CardNetwork>("Visa");
-  const [status, setStatus] = useState<"created" | "pending" | "succeeded" | "failed" | "cancelled">("created");
-  const [payment, setPayment] = useState(() => createSandboxPaymentIntent({ amount: 25, network: "Visa" }));
-  const [formMessage, setFormMessage] = useState(t("donate.cardCopy"));
+  const [validationMessage, setValidationMessage] = useState("");
 
-  const amountValue = useMemo(() => sanitizeDonationAmount(amount), [amount]);
+  const sanitizedAmount = useMemo(() => sanitizeDonationAmount(amount), [amount]);
+  const selectedAmount = sanitizedAmount > 0 ? currencyFormatter.format(sanitizedAmount) : "$0.00";
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (!Number.isFinite(amountValue) || amountValue < 1) {
-      setStatus("failed");
-      setFormMessage("Please enter a valid donation amount before continuing.");
+  const handleContinue = () => {
+    const result = validateDonationAmount(amount);
+
+    if (!result.valid) {
+      setValidationMessage(result.message);
       return;
     }
 
-    const nextPayment = createSandboxPaymentIntent({ amount: amountValue, network });
-    setPayment(nextPayment);
-    setStatus("pending");
-    setFormMessage(`${t("donate.checkout")}: ${nextPayment.reference}`);
-    setPayment(markSandboxPaymentPending(nextPayment));
+    if (selectedMethod === "celoht") {
+      setValidationMessage(t("donate.celoSelected"));
+      window.open(CELOHT_URL, "_blank", "noopener,noreferrer");
+      return;
+    }
+
+    setValidationMessage(t("donate.cardComingSoon"));
   };
 
-  const handleApprove = () => {
-    const nextPayment = completeSandboxPayment(payment);
-    setPayment(nextPayment);
-    setStatus("succeeded");
-    setFormMessage(`${t("donate.successStatus")}: ${nextPayment.reference}`);
-  };
-
-  const handleCancel = () => {
-    const nextPayment = cancelSandboxPayment(payment);
-    setPayment(nextPayment);
-    setStatus("cancelled");
-    setFormMessage(`${t("donate.cancelStatus")}: ${nextPayment.reference}`);
-  };
-
-  const handleFailure = () => {
-    const nextPayment = failSandboxPayment(payment);
-    setPayment(nextPayment);
-    setStatus("failed");
-    setFormMessage(`${t("donate.failureStatus")}: ${nextPayment.reference}`);
-  };
+  const summaryStatus = selectedMethod === "card" ? t("donate.statusPending") : t("donate.statusExternal");
 
   return (
-    <div className="app-page">
+    <div className="app-page donate-page">
       <PageHeading title={t("page.donate.title")} description={t("page.donate.description")} />
 
-      <div className="payment-option-grid">
-        <Panel className="donation-provider">
-          <span className="donation-provider__icon" aria-hidden="true"><HeartHandshake size={23} /></span>
-          <div className="donation-provider__copy">
-            <div className="donation-provider__heading"><h2>{t("donate.celoTitle")}</h2><StatusBadge status="available" /></div>
-            <p>{t("donate.celoCopy")}</p>
-            <p className="privacy-note"><ShieldCheck size={15} aria-hidden="true" />{t("donate.externalNotice")}</p>
-            <a className="button button--primary donate-external" href={CELOHT_URL} target="_blank" rel="noopener noreferrer">
-              {t("donate.celoButton")}<ArrowUpRight size={17} aria-hidden="true" />
+      <div className="donate-grid">
+        <Panel className="donate-panel donate-panel--primary">
+          <div className="donate-header">
+            <p className="eyebrow">{t("donate.heroTitle")}</p>
+            <h2>{t("donate.heroTitle")}</h2>
+            <p>{t("donate.heroCopy")}</p>
+          </div>
+
+          <div className="donate-amount-block">
+            <p className="eyebrow">{t("donate.amountTitle")}</p>
+            <div className="donate-amount-grid" role="group" aria-label={t("donate.amountTitle")}>
+              {presetAmounts.map((preset) => (
+                <button
+                  key={preset}
+                  type="button"
+                  className={`donate-amount-option${Number(amount) === preset ? " is-selected" : ""}`}
+                  onClick={() => {
+                    setAmount(String(preset));
+                    setValidationMessage("");
+                  }}
+                  aria-pressed={Number(amount) === preset}
+                >
+                  {currencyFormatter.format(preset)}
+                </button>
+              ))}
+            </div>
+            <label className="field-label" htmlFor="donation-amount">{t("donate.amountCustom")}</label>
+            <input
+              id="donation-amount"
+              type="number"
+              min={1}
+              max={10000}
+              step="0.01"
+              inputMode="decimal"
+              value={amount}
+              onChange={(event) => {
+                setAmount(event.target.value);
+                setValidationMessage("");
+              }}
+              aria-invalid={Boolean(validationMessage)}
+            />
+            <p className="donate-helper-text">{t("donate.amountPreset")}</p>
+          </div>
+
+          <div className="donate-methods" aria-label={t("donate.amountTitle")}>
+            <button
+              type="button"
+              className={`donate-method-option${selectedMethod === "card" ? " is-selected" : ""}`}
+              onClick={() => setSelectedMethod("card")}
+              aria-pressed={selectedMethod === "card"}
+            >
+              <span className="donate-method-option__icon" aria-hidden="true"><CreditCard size={18} /></span>
+              <span className="donate-method-option__copy">
+                <strong>{t("donate.cardPayment")}</strong>
+                <small>{t("donate.cardMethodCopy")}</small>
+              </span>
+              <StatusBadge status="development" />
+            </button>
+
+            <a
+              href={CELOHT_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`donate-method-option donate-method-option--external${selectedMethod === "celoht" ? " is-selected" : ""}`}
+              onClick={() => setSelectedMethod("celoht")}
+            >
+              <span className="donate-method-option__icon" aria-hidden="true"><HeartHandshake size={18} /></span>
+              <span className="donate-method-option__copy">
+                <strong>{t("donate.celoTitle")}</strong>
+                <small>{t("donate.celoCopy")}</small>
+              </span>
+              <StatusBadge status="soon" />
             </a>
+          </div>
+
+          {validationMessage && (
+            <p className="form-status form-status--error" role="alert" aria-live="assertive">
+              {validationMessage}
+            </p>
+          )}
+
+          <div className="donate-actions">
+            <Button type="button" variant="primary" onClick={handleContinue} disabled={selectedMethod === "card"}>
+              {selectedMethod === "card" ? t("donate.cardDisabled") : t("donate.continue")}
+            </Button>
+            <Link to="/charity" className="button button--secondary">{t("nav.charity")}</Link>
           </div>
         </Panel>
 
-        <Panel className="donation-provider">
-          <span className="donation-provider__icon" aria-hidden="true"><CreditCard size={23} /></span>
-          <div className="donation-provider__copy">
-            <div className="donation-provider__heading"><h2>{t("donate.cardTitle")}</h2><StatusBadge status="available" /></div>
-            <p>{t("donate.cardCopy")}</p>
-            <form className="card-donation-form" onSubmit={handleSubmit}>
-              <label className="field-label" htmlFor="donation-network">{t("donate.cardNetwork")}</label>
-              <select id="donation-network" value={network} onChange={(event) => setNetwork(event.target.value as CardNetwork)}>
-                {cardNetworks.map((option) => <option key={option} value={option}>{option}</option>)}
-              </select>
-
-              <label className="field-label" htmlFor="donation-amount">{t("donate.amount")}</label>
-              <input id="donation-amount" type="number" min={1} max={10000} step={1} value={amount} onChange={(event) => setAmount(event.target.value)} />
-
-              <div className="card-donation-form__actions">
-                <Button type="submit" variant="primary">{t("donate.checkout")}</Button>
-                {status === "pending" && <Button type="button" variant="secondary" onClick={handleCancel}>{t("donate.cancelStatus")}</Button>}
+        <Panel className="donate-panel donate-panel--summary">
+          <div className="donate-summary-card">
+            <p className="eyebrow">{t("donate.reviewTitle")}</p>
+            <h3>{selectedAmount}</h3>
+            <dl className="donate-summary-list">
+              <div>
+                <dt>{t("donate.reviewMethod")}</dt>
+                <dd>{selectedMethod === "card" ? t("donate.cardPayment") : t("donate.celoTitle")}</dd>
               </div>
-            </form>
-
-            {status !== "created" && (
-              <div className="checkout-status" role="status">
-                <strong>{t("donate.paymentStatus")}: {status}</strong>
-                <span>{formMessage}</span>
-                <small>{t("donate.sandboxMode")}</small>
+              <div>
+                <dt>{t("donate.reviewStatus")}</dt>
+                <dd>{summaryStatus}</dd>
               </div>
-            )}
+            </dl>
 
-            {status === "pending" && (
-              <div className="card-donation-form__actions card-donation-form__actions--secondary">
-                <Button type="button" variant="primary" onClick={handleApprove}>{t("donate.successStatus")}</Button>
-                <Button type="button" variant="secondary" onClick={handleFailure}>{t("donate.failureStatus")}</Button>
-              </div>
-            )}
+            <p className="donate-summary-note">
+              {selectedMethod === "card" ? t("donate.cardComingSoon") : t("donate.reviewNote")}
+            </p>
+          </div>
 
-            <ul className="payment-spec-list" aria-label={t("donate.paymentSummary")}>
-              <li><strong>{t("donate.paymentIntent")}</strong><span>{payment.id}</span></li>
-              <li><strong>{t("donate.checkout")}</strong><span>{payment.checkoutUrl}</span></li>
-              <li><strong>{t("donate.successStatus")}</strong><span>{t("donate.successCopy")}</span></li>
-              <li><strong>{t("donate.failureStatus")}</strong><span>{t("donate.failureCopy")}</span></li>
-              <li><strong>{t("donate.cancelStatus")}</strong><span>{t("donate.cancelCopy")}</span></li>
-              <li><strong>{t("donate.webhook")}</strong><span>{t("donate.webhookCopy")}</span></li>
-              <li><strong>{t("donate.idempotency")}</strong><span>{payment.idempotencyKey}</span></li>
-              <li><strong>{t("donate.audit")}</strong><span>{t("donate.auditCopy")}</span></li>
-            </ul>
+          <div className="donate-security-box">
+            <span className="donate-security-box__icon" aria-hidden="true"><ShieldCheck size={18} /></span>
+            <div>
+              <strong>{t("donate.privacyTitle")}</strong>
+              <p>{t("donate.privacyCopy")}</p>
+            </div>
+          </div>
+
+          <div className="donate-transparency-box">
+            <span className="donate-security-box__icon" aria-hidden="true"><ArrowUpRight size={18} /></span>
+            <div>
+              <strong>{t("donate.transparencyTitle")}</strong>
+              <p>{t("donate.transparency")}</p>
+            </div>
           </div>
         </Panel>
       </div>
 
       <p className="transparency-note"><ShieldCheck size={17} aria-hidden="true" />{t("donate.transparency")}</p>
-      <p className="donation-footer-link"><Link to="/charity" className="inline-link">{t("nav.charity")}<ArrowRight size={16} aria-hidden="true" /></Link></p>
+      <p className="donation-footer-link">
+        <Link to="/charity" className="inline-link">{t("nav.charity")}<ArrowRight size={16} aria-hidden="true" /></Link>
+      </p>
     </div>
   );
 }

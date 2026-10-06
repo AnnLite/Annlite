@@ -152,6 +152,15 @@ describe("AnnLite web experience", () => {
     expect(screen.queryByText(/\$[0-9]/)).not.toBeInTheDocument();
   });
 
+  test("donate starts on the honest external-provider path instead of a fake card flow", async () => {
+    await renderAt("/donate");
+    expect(screen.getAllByRole("heading", { name: "Give to AnnLite" }).length).toBeGreaterThan(0);
+    expect(screen.getByText("External provider flow")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Continue" })).toBeEnabled();
+    const cardOption = screen.getByRole("button", { name: /Card payment/i });
+    expect(cardOption).toHaveAttribute("aria-pressed", "false");
+  });
+
   test("mobile menu exposes the full site navigation", async () => {
     const user = userEvent.setup();
     await renderAt();
